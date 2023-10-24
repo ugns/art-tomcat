@@ -41,11 +41,20 @@ spec:
           livenessProbe:
             tcpSocket:
               port: http
-            initialDelaySeconds: 30
+            initialDelaySeconds: 15
+            periodSeconds: 10
           readinessProbe:
+            httpGet:
+              path: /
+              scheme: HTTP
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          startupProbe:
             tcpSocket:
               port: http
             initialDelaySeconds: 30
+            periodSeconds: 10
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
