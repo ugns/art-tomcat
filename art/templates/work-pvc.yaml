@@ -1,0 +1,31 @@
+{{- if eq (.Values.workStorage.enabled | toString) "true" }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "art.fullname" . }}-work
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "art.labels" . | nindent 4 }}
+  {{- with .Values.workStorage.annotations  }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.workStorage.finalizers  }}
+  finalizers:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.workStorage.accessMode | default "ReadWriteOnce" }}
+  resources:
+    requests:
+      storage: {{ .Values.workStorage.size | quote }}
+  {{- if .Values.workStorage.storageClass }}
+  storageClassName: {{ .Values.workStorage.storageClass }}
+  {{- end }}
+  {{- with .Values.workStorage.selectorLabels }}
+  selector:
+    matchLabels:
+    {{- toYaml . | nindent 6 }}
+  {{- end }}
+{{- end }}

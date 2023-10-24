@@ -1,0 +1,31 @@
+{{- if eq (.Values.exportStorage.enabled | toString) "true" }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "art.fullname" . }}-export
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "art.labels" . | nindent 4 }}
+  {{- with .Values.exportStorage.annotations  }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.exportStorage.finalizers  }}
+  finalizers:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.exportStorage.accessMode | default "ReadWriteOnce" }}
+  resources:
+    requests:
+      storage: {{ .Values.exportStorage.size | quote }}
+  {{- if .Values.exportStorage.storageClass }}
+  storageClassName: {{ .Values.exportStorage.storageClass }}
+  {{- end }}
+  {{- with .Values.exportStorage.selectorLabels }}
+  selector:
+    matchLabels:
+    {{- toYaml . | nindent 6 }}
+  {{- end }}
+{{- end }}

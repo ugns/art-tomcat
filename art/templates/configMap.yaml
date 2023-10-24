@@ -1,0 +1,13 @@
+{{- $fullName := include "art.fullname" . -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullName }}-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "art.labels" . | nindent 4 }}
+data:
+  art-custom-settings.json: |-
+{{- toPrettyJson .Values.artCustomSettings | nindent 4 }}
+  groovy-whitelist.txt: |-
+{{- tpl .Values.groovyWhitelist  . | nindent 4 }}

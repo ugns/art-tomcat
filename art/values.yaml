@@ -1,0 +1,180 @@
+# Default values for art.
+# This is a YAML-formatted file.
+
+replicaCount: 1
+
+image:
+  repository: art
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+terminationGracePeriodSeconds: 10
+
+# This configures the Statefulset to create a PVC for work storage
+workStorage:
+  enabled: true
+  # Size of the PVC created
+  size: 1Gi
+  # Location where the PVC will be mounted
+  # mountPath: "/work"
+  # Name of the storage class to use. If null it will use the
+  # configured default Storage Class
+  storageClass: null
+  # Access Mode of the storage device being used for the PVC
+  accessMode: ReadWriteOnce
+  # Annotations to apply to the PVC
+  annotations: {}
+
+# This configures the Statefulset to create a PVC for export storage
+exportStorage:
+  enabled: true
+  # Size of the PVC created
+  size: 5Gi
+  # Location where the PVC will be mounted
+  # mountPath: "/export"
+  # Name of the storage class to use. If null it will use the
+  # configured default Storage Class
+  storageClass: null
+  # Access Mode of the storage device being used for the PVC
+  accessMode: ReadWriteOnce
+  # Annotations to apply to the PVC
+  annotations: {}
+
+artCustomSettings:
+  showErrors: true
+  showErrorsApi: true
+  enableDirectParameterSubstitution: true
+  exportDirectory: "/export"
+  workDirectory: "/work"
+  checkExportFileAccess: false
+  enableGroovySandbox: true
+  enableEmailing: true
+  jwtSecret: ''
+  encryptionKey: ''
+  encryptionPassword:
+    password: ''
+    keyLength: 128
+  allowRepositoryLogin: true
+  enableServerFolderDestination: false
+  allowHttpHeaderAuthentication: false
+  demo: false
+  useCache: true
+  enableCsrf: true
+  allowedCommandUrls:
+  - exportRecords
+  - runJob
+  - clearAllCaches
+  csrfExempt:
+
+groovyWhitelist: |
+  #classes used with the mongo java driver
+  com.mongodb.MongoClientURI
+  com.mongodb.MongoClient
+  com.mongodb.DB
+  com.mongodb.DBCollection
+  com.mongodb.BasicDBObject
+  com.mongodb.DBObject
+  com.mongodb.DBCursor
+  com.mongodb.client.MongoCollection
+  com.mongodb.client.MongoCursor
+  com.mongodb.client.MongoDatabase
+  com.mongodb.WriteResult
+  org.bson.Document
+  org.bson.types.ObjectId
+  com.mongodb.client.internal.MongoDatabaseImpl
+  com.mongodb.client.internal.MongoCollectionImpl
+  com.mongodb.client.internal.Java8FindIterableImpl
+  com.mongodb.client.internal.MongoBatchCursorAdapter
+
+  #classes used with the jongo library
+  org.jongo.Jongo
+  org.jongo.MongoCollection
+  org.jongo.MongoCursor
+  org.jongo.Find
+
+  #classes used with the morphia library
+  dev.morphia.Morphia
+  dev.morphia.DatastoreImpl
+  dev.morphia.Key
+  dev.morphia.query.QueryImpl
+
+  #other classes
+  java.util.ArrayList
+  java.util.LinkedHashMap
+  java.util.Date
+  java.util.HashMap
+  [Ljava.lang.Object;
+  [Ljava.lang.String;
+  java.util.LinkedList
