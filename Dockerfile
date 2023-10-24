@@ -9,10 +9,11 @@ RUN wget -O art-latest.zip https://sourceforge.net/projects/art/files/latest/dow
     unzip art-latest.zip
 
 FROM $ART_BASE_IMAGE
-ENV CATALINA_OPTS="-Dart.configDirectory=/art"
+ENV CATALINA_OPTS="-Dart.configDirectory=/config"
 COPY --from=builder /art-*/art.war /usr/local/tomcat/webapps/
-RUN mkdir /art && \
-    mkdir /work && \
-    mkdir /export
-VOLUME /work
-VOLUME /export
+RUN mkdir /config
+# RUN mkdir /config && \
+#     mkdir /work && \
+#     mkdir /export
+# VOLUME /work
+# VOLUME /export
